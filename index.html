@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Live Stock Screener — Live Yahoo</title>
+  <link href="https://fonts.googleapis.com/css?family=Inter:400,600&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --bg:#0f1724;--card:#071226;--muted:#9fb0c8;--accent:#3b82f6;
+      --glass: rgba(255,255,255,0.03);
+    }
+    html,body{height:100%;margin:0;font-family:Inter,Segoe UI,Arial;background:linear-gradient(180deg,#071024,#041022);color:#e6eef8}
+    .wrap{max-width:1150px;margin:20px auto;padding:18px}
+    header{display:flex;align-items:center;justify-content:space-between;gap:12px}
+    h1{margin:0;font-size:20px}
+    .muted{color:var(--muted);font-size:13px}
+    .controls{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+    input,select,button{padding:8px 10px;border-radius:8px;border:1px solid rgba(255,255,255,0.06);background:transparent;color:inherit}
+    button{background:var(--accent);border:none;color:white;cursor:pointer}
+    table{width:100%;border-collapse:collapse;margin-top:14px;background:var(--card);border-radius:10px;overflow:hidden}
+    thead th{padding:12px;text-align:left;font-weight:600;position:sticky;top:0;background:linear-gradient(90deg,#0b2a40,#052033)}
+    tbody td{padding:10px;border-top:1px solid rgba(255,255,255,0.02)}
+    tr:hover td{background:var(--glass)}
+    .chip{background:#092032;padding:6px 10px;border-radius:999px;border:1px solid rgba(255,255,255,0.03)}
+    .spark{width:120px;height:28px}
+    .small{font-size:13px}
+    .center{text-align:center}
+    @media (max-width:900px){
+      .controls{flex-direction:column}
+      .spark{display:none}
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div>
+        <h1>📈 Live Stock Screener</h1>
+        <div class="muted">Live data from Yahoo Finance (proxied). Replace PROXY_URL in <code>main.js</code>.</div>
+      </div>
+      <div class="chip small">Free • Chromebook friendly</div>
+    </header>
+
+    <div class="controls" style="margin-top:14px">
+      <input id="search" placeholder="Search symbol or name" style="min-width:200px"/>
+      <select id="sectorFilter"><option value="">All sectors</option></select>
+      <select id="capFilter">
+        <option value="">Market Cap</option>
+        <option value="mega">&gt; 200B</option>
+        <option value="large">10B - 200B</option>
+        <option value="mid">2B - 10B</option>
+        <option value="small">&lt; 2B</option>
+      </select>
+      <select id="priceFilter">
+        <option value="">Price</option>
+        <option value="p1">&lt; $20</option>
+        <option value="p2">$20 - $100</option>
+        <option value="p3">$100 - $500</option>
+        <option value="p4">&gt; $500</option>
+      </select>
+
+      <select id="changeFilter">
+        <option value="">Change %</option>
+        <option value="c1">&lt; -5%</option>
+        <option value="c2">-5% to -1%</option>
+        <option value="c3">-1% to 1%</option>
+        <option value="c4">1% to 5%</option>
+        <option value="c5">&gt; 5%</option>
+      </select>
+
+      <select id="volumeFilter">
+        <option value="">Volume</option>
+        <option value="v1">&lt; 1M</option>
+        <option value="v2">1M - 10M</option>
+        <option value="v3">10M - 100M</option>
+        <option value="v4">&gt; 100M</option>
+      </select>
+
+      <select id="timeframe">
+        <option value="1d">1d</option>
+        <option value="5d">5d</option>
+        <option value="1mo">1mo</option>
+      </select>
+
+      <button id="refreshBtn">Refresh</button>
+      <div id="status" class="muted small" style="align-self:center;margin-left:6px"></div>
+    </div>
+
+    <table id="stockTable" aria-live="polite">
+      <thead>
+        <tr>
+          <th data-key="symbol">Symbol ▲</th>
+          <th data-key="shortName">Name</th>
+          <th data-key="regularMarketPrice">Price</th>
+          <th data-key="regularMarketChange">Change</th>
+          <th data-key="regularMarketChangePercent">Change %</th>
+          <th data-key="marketCap">Market Cap</th>
+          <th data-key="regularMarketVolume">Volume</th>
+          <th>Recent</th>
+        </tr>
+      </thead>
+      <tbody id="stockBody"></tbody>
+    </table>
+    <div class="muted small" style="margin-top:10px">Notes: The page requests live quotes and small chart data for the selected timeframe. If you deploy the worker and replace PROXY_URL in <code>main.js</code> the site will work live.</div>
+  </div>
+
+  <script src="main.js"></script>
+</body>
+</html>
